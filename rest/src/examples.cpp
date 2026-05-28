@@ -39,6 +39,21 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
   add("market:time", [this] {
     return print_response(client_.get(c::kMarketTime, {}, false));
   });
+  add("market:ping", [this] {
+    return print_response(client_.get(c::kMarketPing, {}, false));
+  });
+  add("market:handicap-kline", [this] {
+    return print_response(client_.get(c::kMarketHandicapKline1m,
+      {{"symbol", "BTC-USDT-SWAP"}, {"stime", "1700000000"}, {"limit", "10"}}, false));
+  });
+  add("market:handicap-orderbook", [this] {
+    return print_response(client_.get(c::kMarketHandicapOrderbook,
+      {{"symbol", "BTC-USDT-SWAP"}, {"stime", "1700000000"}, {"limit", "10"}}, false));
+  });
+  add("market:handicap-trade", [this] {
+    return print_response(client_.get(c::kMarketHandicapTrade,
+      {{"symbol", "BTC-USDT-SWAP"}, {"stime", "1700000000"}, {"limit", "10"}}, false));
+  });
 
   add("account:balance", [this] {
     return print_response(client_.get(c::kAccountBalance, {{"instType", c::kSwap}, {"ccy", "USDT"}}));
@@ -48,6 +63,14 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
   });
   add("account:positions", [this] {
     return print_response(client_.get(c::kPositions, {{"instType", c::kSwap}}));
+  });
+  add("account:positions-history", [this] {
+    return print_response(client_.get(c::kPositionsHistory,
+      {{"instType", c::kSwap}, {"limit", "10"}}));
+  });
+  add("account:leverage-info", [this] {
+    return print_response(client_.get(c::kAccountLeverageInfo,
+      {{"instId", "BTC-USDT-SWAP"}, {"mgnMode", c::kCross}, {"mrgPosition", c::kMerge}}));
   });
   add("account:set-leverage", [this] {
     const std::string body =
@@ -59,6 +82,16 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
     const std::string body =
         R"({"instId":"BTC-USDT-SWAP","tdMode":"cross","ccy":"USDT","side":"buy","posSide":"long","mrgPosition":"split","ordType":"market","sz":"1","px":"1"})";
     return print_response(client_.post(c::kTradeOrder, body));
+  });
+  add("trade:batch-orders", [this] {
+    const std::string body =
+        R"({"orders":[{"instId":"BTC-USDT-SWAP","tdMode":"cross","side":"buy","posSide":"long","mrgPosition":"merge","ordType":"market","sz":"1"},{"instId":"ETH-USDT-SWAP","tdMode":"cross","side":"buy","posSide":"long","mrgPosition":"merge","ordType":"market","sz":"1"}]})";
+    return print_response(client_.post(c::kTradeBatchOrders, body));
+  });
+  add("trade:batch-order-query", [this] {
+    const std::string body =
+        R"({"orders":[{"instId":"BTC-USDT-SWAP","ordId":"1000000000000000"},{"instId":"ETH-USDT-SWAP","ordId":"1000000000000001"}]})";
+    return print_response(client_.post(c::kTradeBatchOrderQuery, body));
   });
   add("trade:cancel-order", [this] {
     return print_response(client_.post(c::kTradeCancelOrder, R"({"instId":"BTC-USDT-SWAP","ordId":"1000000000000000"})"));
@@ -99,6 +132,14 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
   add("trade:trigger-order", [this] {
     return print_response(client_.post(c::kTradeTriggerOrder, R"({"instId":"BTC-USDT-SWAP","tdMode":"cross","side":"buy","posSide":"long","ordType":"market","sz":"1","triggerPx":"50000","triggerPxType":"last"})"));
   });
+  add("trade:cancel-trigger-order", [this] {
+    return print_response(client_.post(c::kTradeCancelTriggerOrder,
+      R"({"instId":"BTC-USDT-SWAP","ordId":"1000000000000000"})"));
+  });
+  add("trade:cancel-trigger-all", [this] {
+    return print_response(client_.post(c::kTradeCancelTriggerAll,
+      R"({"ProductGroup":"SwapU","InstrumentID":"BTCUSDT","IsCrossMargin":-1,"IsMergeMode":-1})"));
+  });
   add("trade:batch-close-position", [this] {
     return print_response(client_.post(c::kTradeBatchClosePosition, R"({"instId":"BTC-USDT-SWAP","posSide":"long","mgnMode":"cross"})"));
   });
@@ -128,6 +169,14 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
   });
   add("trade:trace-order-list", [this] {
     return print_response(client_.get(c::kTradeTraceOrderList, {{"instId", "BTC-USDT-SWAP"}, {"limit", "10"}}));
+  });
+  add("trade:merge-positions", [this] {
+    return print_response(client_.post(c::kTradeMergePositions,
+      R"({"instId":"BTC-USDT-SWAP","posIds":["1000000000000000","1000000000000001"]})"));
+  });
+  add("trade:increase-position", [this] {
+    return print_response(client_.post(c::kTradeIncreasePosition,
+      R"({"instId":"BTC-USDT-SWAP","posId":"1000000000000000","ordType":"market","sz":"1"})"));
   });
 
   add("listenkey:acquire", [this] {
@@ -188,6 +237,27 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
   });
   add("asset:transfer", [this] {
     return print_response(client_.post(c::kAssetTransfer, R"({"coin":"USDT","amount":"10","from":"fund","to":"swap"})"));
+  });
+  add("asset:withdrawal", [this] {
+    const std::string body =
+        R"({"ccy":"USDT","chain":"USDT-TRC20","amt":"30","addressId":"replace-with-address-id"})";
+    return print_response(client_.post(c::kAssetWithdrawal, body));
+  });
+  add("asset:cancel-withdrawal", [this] {
+    return print_response(client_.post(c::kAssetCancelWithdrawal,
+      R"({"wdId":"replace-with-wd-id","ccy":"USDT"})"));
+  });
+  add("asset:withdraw-assets", [this] {
+    return print_response(client_.get(c::kAssetWithdrawAssets, {{"ccy", "USDT"}}));
+  });
+  add("asset:withdraw-chains", [this] {
+    return print_response(client_.get(c::kAssetWithdrawChains, {{"ccy", "USDT"}}));
+  });
+  add("asset:withdraw-addresses", [this] {
+    return print_response(client_.get(c::kAssetWithdrawAddresses, {{"ccy", "USDT"}}));
+  });
+  add("asset:withdraw-config", [this] {
+    return print_response(client_.get(c::kAssetWithdrawConfig, {{"ccy", "USDT"}}));
   });
 
   add("subaccount:list", [this] {

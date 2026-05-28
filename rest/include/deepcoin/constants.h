@@ -17,8 +17,10 @@ inline constexpr char kLong[] = "long";
 
 inline constexpr char kAccountBalance[] = "/deepcoin/account/balances";
 inline constexpr char kAccountBills[] = "/deepcoin/account/bills";
+inline constexpr char kAccountLeverageInfo[] = "/deepcoin/account/leverage-info";
 inline constexpr char kSetLeverage[] = "/deepcoin/account/set-leverage";
 inline constexpr char kPositions[] = "/deepcoin/account/positions";
+inline constexpr char kPositionsHistory[] = "/deepcoin/account/positions-history";
 
 inline constexpr char kMarketBooks[] = "/deepcoin/market/books";
 inline constexpr char kMarketCandles[] = "/deepcoin/market/candles";
@@ -30,6 +32,10 @@ inline constexpr char kMarketTrades[] = "/deepcoin/market/trades";
 inline constexpr char kMarketStepMargin[] = "/deepcoin/market/step-margin";
 inline constexpr char kMarketBookSpread[] = "/deepcoin/market/book-spread";
 inline constexpr char kMarketTime[] = "/deepcoin/market/time";
+inline constexpr char kMarketPing[] = "/deepcoin/market/ping";
+inline constexpr char kMarketHandicapKline1m[] = "/deepcoin/market/handicap-kline1m";
+inline constexpr char kMarketHandicapOrderbook[] = "/deepcoin/market/handicap-orderbook";
+inline constexpr char kMarketHandicapTrade[] = "/deepcoin/market/handicap-trade";
 
 inline constexpr char kTradeOrder[] = "/deepcoin/trade/order";
 inline constexpr char kTradeCancelOrder[] = "/deepcoin/trade/cancel-order";
@@ -55,6 +61,12 @@ inline constexpr char kTradeTriggerOrdersPending[] = "/deepcoin/trade/trigger-or
 inline constexpr char kTradeTriggerOrdersHistory[] = "/deepcoin/trade/trigger-orders-history";
 inline constexpr char kTradeTraceOrder[] = "/deepcoin/trade/trace-order";
 inline constexpr char kTradeTraceOrderList[] = "/deepcoin/trade/trace-order-list";
+inline constexpr char kTradeMergePositions[] = "/deepcoin/trade/merge-positions";
+inline constexpr char kTradeIncreasePosition[] = "/deepcoin/trade/increase-position";
+inline constexpr char kTradeBatchOrders[] = "/deepcoin/trade/batch-orders";
+inline constexpr char kTradeBatchOrderQuery[] = "/deepcoin/trade/batch-order-query";
+inline constexpr char kTradeCancelTriggerOrder[] = "/deepcoin/trade/cancel-trigger-order";
+inline constexpr char kTradeCancelTriggerAll[] = "/deepcoin/trade/swap/cancel-trigger-all";
 
 inline constexpr char kListenKeyAcquire[] = "/deepcoin/listenkey/acquire";
 inline constexpr char kListenKeyExtend[] = "/deepcoin/listenkey/extend";
@@ -76,6 +88,12 @@ inline constexpr char kAssetDepositList[] = "/deepcoin/asset/deposit-list";
 inline constexpr char kAssetWithdrawList[] = "/deepcoin/asset/withdraw-list";
 inline constexpr char kAssetRechargeChainList[] = "/deepcoin/asset/recharge-chain-list";
 inline constexpr char kAssetTransfer[] = "/deepcoin/asset/transfer";
+inline constexpr char kAssetWithdrawal[] = "/deepcoin/asset/withdrawal";
+inline constexpr char kAssetCancelWithdrawal[] = "/deepcoin/asset/cancel-withdrawal";
+inline constexpr char kAssetWithdrawAssets[] = "/deepcoin/asset/withdraw-assets";
+inline constexpr char kAssetWithdrawChains[] = "/deepcoin/asset/withdraw-chains";
+inline constexpr char kAssetWithdrawAddresses[] = "/deepcoin/asset/withdraw-addresses";
+inline constexpr char kAssetWithdrawConfig[] = "/deepcoin/asset/withdraw-config";
 
 inline constexpr char kSubAccountTransfer[] = "/deepcoin/sub-account/sub-account-transfer";
 inline constexpr char kSubAccountTransferRecord[] = "/deepcoin/sub-account/sub-account-transfer-record";
