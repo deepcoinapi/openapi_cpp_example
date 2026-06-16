@@ -18,8 +18,20 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
   add("market:index-kline", [this] {
     return print_response(client_.get(c::kMarketIndexCandles, {{"instId", "BTC-USDT-SWAP"}, {"bar", "1m"}, {"limit", "10"}}, false));
   });
+  add("market:mark-price", [this] {
+    return print_response(client_.get(c::kMarketMarkPrice, {{"instType", c::kSwap}, {"instId", "BTC-USDT-SWAP"}}, false));
+  });
   add("market:mark-kline", [this] {
     return print_response(client_.get(c::kMarketMarkCandles, {{"instId", "BTC-USDT-SWAP"}, {"bar", "1m"}, {"limit", "10"}}, false));
+  });
+  add("market:open-interest-volume", [this] {
+    return print_response(client_.get(c::kMarketOpenInterestVolume, {{"instId", "BTC-USDT-SWAP"}, {"bar", "5m"}, {"limit", "10"}}, false));
+  });
+  add("market:long-short-ratio", [this] {
+    return print_response(client_.get(c::kMarketLongShortRatio, {{"instId", "BTC-USDT-SWAP"}, {"bar", "5m"}, {"limit", "10"}}, false));
+  });
+  add("market:taker-volume", [this] {
+    return print_response(client_.get(c::kMarketTakerVolume, {{"instId", "BTC-USDT-SWAP"}, {"bar", "5m"}, {"limit", "10"}}, false));
   });
   add("market:instruments", [this] {
     return print_response(client_.get(c::kMarketInstruments, {{"instType", c::kSwap}, {"uly", "BTC-USDT"}}, false));
@@ -77,11 +89,26 @@ ExampleRegistry::ExampleRegistry(HttpClient client) : client_(std::move(client))
         R"({"instId":"BTC-USDT-SWAP","lever":"17","mgnMode":"cross","mrgPosition":"merge"})";
     return print_response(client_.post(c::kSetLeverage, body));
   });
+  add("account:all-balances", [this] {
+    return print_response(client_.get(c::kAccountAllBalances,
+      {{"accountType", "funding,spot,swapU"}, {"ccy", "USDT"}}));
+  });
+  add("account:uid", [this] {
+    return print_response(client_.get(c::kAccountUid));
+  });
+  add("account:trade-fee", [this] {
+    return print_response(client_.get(c::kAccountTradeFee,
+      {{"instType", c::kSwap}, {"instId", "BTC-USDT-SWAP"}}));
+  });
 
   add("trade:order", [this] {
     const std::string body =
         R"({"instId":"BTC-USDT-SWAP","tdMode":"cross","ccy":"USDT","side":"buy","posSide":"long","mrgPosition":"split","ordType":"market","sz":"1","px":"1"})";
     return print_response(client_.post(c::kTradeOrder, body));
+  });
+  add("trade:get-order", [this] {
+    return print_response(client_.get(c::kTradeOrder,
+      {{"instId", "BTC-USDT-SWAP"}, {"ordId", "replace-with-order-id"}}));
   });
   add("trade:batch-orders", [this] {
     const std::string body =
